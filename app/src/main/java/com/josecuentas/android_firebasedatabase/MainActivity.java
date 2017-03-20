@@ -1,9 +1,10 @@
 package com.josecuentas.android_firebasedatabase;
 
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -13,29 +14,50 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Random;
-
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    FirebaseAuth mAuth;
+    Button mButLogOut;
+    ValueEventListener mValueEventInfo;
+    FirebaseDatabase database;
+    DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        injects();
+        injectView();
+        setup();
+        events();
     }
 
-    private void injects() {
+    private void injectView() {
+        mButLogOut = (Button) findViewById(R.id.butLogOut);
+    }
+
+    private void setup() {
+        setupFirebaseAuth();
         setupFirebase();
     }
 
+    private void events() {
+        mButLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                myRef.child(mAuth.getCurrentUser().getUid()).removeEventListener(mValueEventInfo);
+                mAuth.signOut();
+                finish();
+            }
+        });
+    }
+
     private void setupFirebase() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("users");
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("users");
 
-
-        String userId = String.valueOf(new Random().nextInt());
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) return;
+        String userId = currentUser.getUid();
 
         User user = new User();
         user.setName("José");
@@ -45,8 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         myRef.child(userId).setValue(user);
 
-
-        myRef.child(userId).addValueEventListener(new ValueEventListener() {
+        mValueEventInfo = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
@@ -60,7 +81,14 @@ public class MainActivity extends AppCompatActivity {
                 // Failed to read value
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
-        });
+        };
+        myRef.child(userId).addValueEventListener(mValueEventInfo);
+
+
+    }
+
+    private void setupFirebaseAuth() {
+        mAuth = FirebaseAuth.getInstance();
     }
 
 
