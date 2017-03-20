@@ -22,7 +22,7 @@ public class LogInActivity extends AppCompatActivity {
   private FirebaseAuth mAuth;
   private FirebaseAuth.AuthStateListener mAuthListener;
   EditText mEteEmail, mEtePassword;
-  Button mButLogIn, mButSignUp;
+  Button mButLogIn, mButSignIn;
   private String email, password;
 
 
@@ -47,9 +47,10 @@ public class LogInActivity extends AppCompatActivity {
       }
     });
 
-    mButSignUp.setOnClickListener(new View.OnClickListener() {
+    mButSignIn.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
-
+        Intent intent = new Intent(LogInActivity.this, SignInActivity.class);
+        startActivity(intent);
       }
     });
   }
@@ -58,7 +59,7 @@ public class LogInActivity extends AppCompatActivity {
     mEteEmail = (EditText) findViewById(R.id.eteEmail);
     mEtePassword = (EditText) findViewById(R.id.etePassword);
     mButLogIn = (Button) findViewById(R.id.butLogIn);
-    mButSignUp = (Button) findViewById(R.id.butSignUp);
+    mButSignIn = (Button) findViewById(R.id.butSignIn);
   }
 
   private void setupFirebaseAuth() {
