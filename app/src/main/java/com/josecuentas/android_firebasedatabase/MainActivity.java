@@ -1,10 +1,12 @@
 package com.josecuentas.android_firebasedatabase;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -18,7 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     FirebaseAuth mAuth;
-    Button mButLogOut;
+    Button mButLogOut, mButProfile;
+    TextView mTviUser;
     ValueEventListener mValueEventInfo;
     FirebaseDatabase database;
     DatabaseReference myRef;
@@ -34,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void injectView() {
         mButLogOut = (Button) findViewById(R.id.butLogOut);
+        mButProfile = (Button) findViewById(R.id.butProfile);
+        mTviUser = (TextView) findViewById(R.id.tviUser);
     }
 
     private void setup() {
@@ -47,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
                 myRef.child(mAuth.getCurrentUser().getUid()).removeEventListener(mValueEventInfo);
                 mAuth.signOut();
                 finish();
+            }
+        });
+        mButProfile.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -65,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         user.setAge(23);
         user.setAbout("Hola!");
 
-        myRef.child(userId).setValue(user);
+        //myRef.child(userId).setValue(user);
 
         mValueEventInfo = new ValueEventListener() {
             @Override
@@ -73,7 +84,10 @@ public class MainActivity extends AppCompatActivity {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 User user = dataSnapshot.getValue(User.class);
+                if (user == null) return;
                 Log.d(TAG, "Value is: " + user.toString());
+                String fullName =  user.getName() + " " + user.getLastName();
+                mTviUser.setText(fullName);
             }
 
             @Override
