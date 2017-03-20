@@ -71,6 +71,7 @@ public class LogInActivity extends AppCompatActivity {
         if (user != null) {
           // User is signed in
           Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+          navigationMain();
         } else {
           // User is signed out
           Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -104,8 +105,6 @@ public class LogInActivity extends AppCompatActivity {
             if (!task.isSuccessful()) {
               Log.w(TAG, "signInWithEmail:failed", task.getException());
               Toast.makeText(LogInActivity.this, R.string.auth_failed,Toast.LENGTH_SHORT).show();
-            } else {
-              navigationMain();
             }
           }
         });
@@ -114,6 +113,7 @@ public class LogInActivity extends AppCompatActivity {
   private void navigationMain() {
     Intent intent = new Intent(this, MainActivity.class);
     startActivity(intent);
+    finish();
   }
 
   @Override protected void onStart() {
