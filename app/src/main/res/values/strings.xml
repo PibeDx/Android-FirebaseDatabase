@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Android-FirebaseDatabase</string>
+    <string name="auth_failed">No se ha podido identificar el email o el password</string>
 </resources>
