@@ -17,9 +17,7 @@ public class User {
   private String lastName;
   private int age;
   private String about;
-  private Long createTime;
-  private Long updateTime;
-
+  private TimeStamp timestamp = new TimeStamp();
 
   public String getName() {
     return name;
@@ -53,28 +51,12 @@ public class User {
     this.about = about;
   }
 
-  public Object getCreateTime() {
-    if (createTime == null) return ServerValue.TIMESTAMP;
-    return createTime;
+  public TimeStamp getTimestamp() {
+    return timestamp;
   }
 
-  public Map<String, String> getUpdateTime() {
-    return ServerValue.TIMESTAMP;
-  }
-
-  @Exclude public Long getCreationDateLong() {
-    return createTime;
-  }
-  public void setCreateTime(Long createTime) {
-    this.createTime = createTime;
-  }
-
-  @Exclude public Long getUpdateTimeLong() {
-    return updateTime;
-  }
-
-  public void setUpdateTime(Long updateTime) {
-    this.updateTime = updateTime;
+  public void setTimestamp(TimeStamp timestamp) {
+    this.timestamp = timestamp;
   }
 
   @Override public String toString() {
