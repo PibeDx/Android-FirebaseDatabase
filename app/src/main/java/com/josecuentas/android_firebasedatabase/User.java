@@ -1,7 +1,14 @@
 package com.josecuentas.android_firebasedatabase;
 
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.ServerValue;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by iPibeDx on 19/03/17.
+ * http://stackoverflow.com/a/41339272/3738212
  */
 
 public class User {
@@ -10,6 +17,9 @@ public class User {
   private String lastName;
   private int age;
   private String about;
+  private Long createTime;
+  private Long updateTime;
+
 
   public String getName() {
     return name;
@@ -41,6 +51,30 @@ public class User {
 
   public void setAbout(String about) {
     this.about = about;
+  }
+
+  public Object getCreateTime() {
+    if (createTime == null) return ServerValue.TIMESTAMP;
+    return createTime;
+  }
+
+  public Map<String, String> getUpdateTime() {
+    return ServerValue.TIMESTAMP;
+  }
+
+  @Exclude public Long getCreationDateLong() {
+    return createTime;
+  }
+  public void setCreateTime(Long createTime) {
+    this.createTime = createTime;
+  }
+
+  @Exclude public Long getUpdateTimeLong() {
+    return updateTime;
+  }
+
+  public void setUpdateTime(Long updateTime) {
+    this.updateTime = updateTime;
   }
 
   @Override public String toString() {
